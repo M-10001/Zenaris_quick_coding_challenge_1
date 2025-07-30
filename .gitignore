@@ -1,0 +1,50 @@
+# Node.js dependencies
+/node_modules
+
+# Build output
+/dist
+/build
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Optional: lock files (only if you want to ignore them)
+/package-lock.json
+/yarn.lock
+/pnpm-lock.yaml
+
+# Vite cache
+/.vite
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Coverage output
+/coverage
+
+# Optional: JetBrains IDE files
+/.idea/
+
+# Optional: Mac system files
+.AppleDouble
+.LSOverride
