@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {SubmitButton, EditButton, DeleteButton, SaveButton, CancelButton} from "../assets/index.tsx";
+import Dropdown from "../Components/Dropdown.tsx";
 
 const MEAL_CATEGORIES :string[] = ["No category", "Breakfast", "Lunch", "Dinner", "Snacks", "Beverages"];
 
@@ -45,10 +46,26 @@ export default function FavoriteFoods () {
         if (!trimmed) return;
         const updated : Record<number, string[]> = { ...chosenFoods };
         const normalizedTrimmed = trimmed.replace(/\s+/g, '').toLowerCase();
+        const prevNormalizedTrimmed = updated[prevCategoryIndex][prevFoodIndex];
+
+        if (normalizedTrimmed === prevNormalizedTrimmed && prevCategoryIndex === selectedEditingCategoryIndex) return;
+
+        if (normalizedTrimmed === prevNormalizedTrimmed) {
+            updated[prevCategoryIndex] = updated[prevCategoryIndex].filter((_, i) => i !== prevFoodIndex);
+
+            if (!updated[selectedEditingCategoryIndex]) {
+                updated[selectedEditingCategoryIndex] = [];
+            }
+
+            updated[selectedEditingCategoryIndex].push(trimmed);
+            setChosenFoods(updated);
+            setEditingLocation([]);
+            return;
+        }
 
         if (
-            updated[selectedEditingCategoryIndex].some(
-                item => item.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed
+            Object.entries(updated).some(([_, items]) =>
+                items.some(item => item.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed)
             )
         ) return;
 
@@ -95,126 +112,146 @@ export default function FavoriteFoods () {
     };
 
     return (
-        <div>
-            <div>
-                Favorite Foods
-            </div>
-            <div>
-                <input
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                    onKeyDown={handleEnterSubmit}
-                    type="text"
-                    placeholder="Add favorite"
-                ></input>
-                <select
-                    value={selectedCategoryIndex}
-                    onChange={(e) => setSelectedCategoryIndex(Number(e.target.value))}
-                >
-                    {MEAL_CATEGORIES.map((category, index) => (
-                        <option key={index} value={index}>
-                            {category}
-                        </option>
-                    ))}
-                </select>
-                <div 
-                    onClick={() => handleSubmitButton()}
-                    className="w-6 h-6 "
-                >
-                    <img
-                        src={SubmitButton}
-                        alt="Submit"
-                        className="object-fill"
-                    />
-                </div>
-            </div>
-            <div>
-                {MEAL_CATEGORIES.map((category, categoryIndex) => (
-                    <div>
-                        <div>
-                            {category}
+        <div className="w-full bg-stone-200 shadow-md rounded-[10px] pl-[3%] pr-[3%]">
+            <Dropdown title="Favorite foods" titleSize="text-2xl" >
+                <div>
+                    <div
+                        className="w-full grid place-items-center pl-[3%] pr-[3%] grid grid-cols-40 shadow rounded-[10px] bg-stone-300"
+                    >
+                        <input
+                            value={inputText}
+                            onChange={(e) => setInputText(e.target.value)}
+                            onKeyDown={handleEnterSubmit}
+                            type="text"
+                            maxLength={100}
+                            placeholder="Type here"
+                            className="w-full border-none focus:outline-none col-span-29"
+                        ></input>
+                        <select
+                            value={selectedCategoryIndex}
+                            onChange={(e) => setSelectedCategoryIndex(Number(e.target.value))}
+                            className="w-full col-span-8 bg-stone-300 rounded-[10px]"
+                        >
+                            {MEAL_CATEGORIES.map((category, index) => (
+                                <option key={index} value={index}>
+                                    {category}
+                                </option>
+                            ))}
+                        </select>
+                        <div className="w-full col-span-1"></div>
+                        <div 
+                            onClick={() => handleSubmitButton()}
+                            className="col-span-2 w-6 h-6"
+                        >
+                            <img
+                                src={SubmitButton}
+                                alt="Submit"
+                                className="object-fill"
+                            />
                         </div>
-                        {(chosenFoods[categoryIndex] || []).map((food, foodIndex) => (
-                            <div>
+                    </div>
+                    <div>
+                        {MEAL_CATEGORIES.map((category, categoryIndex) => (
+                            <div className={(chosenFoods[categoryIndex]?.length > 0) ? "" : "hidden"}>
+                                <div className="w-full h-[2vh]"></div>
                                 <div
-                                    className={(editing && editingLocation[0] === categoryIndex && editingLocation[1] === foodIndex) ? "hidden" : ""}
+                                    className="w-full bg-stone-300 shadow-md rounded-[10px] pl-[3%] pr-[3%]"
                                 >
-                                    <div>
-                                        {food}
-                                    </div>
-                                    <div
-                                        className="w-6 h-6 "
-                                        onClick={() => {
-                                            setEditingLocation([categoryIndex, foodIndex]);
-                                            setSelectedEditingCategoryIndex(categoryIndex);
-                                            setEditingInputText(food);
-                                        }}
-                                    >
-                                        <img
-                                            src={EditButton}
-                                            alt="Edit"
-                                            className="object-fill"
-                                        />
-                                    </div>
-                                    <div 
-                                        className="w-6 h-6 "
-                                        onClick={() => (handleDeleteButton(categoryIndex, foodIndex))}
-                                    >
-                                        <img
-                                            src={DeleteButton}
-                                            alt="Delete"
-                                            className="object-fill"
-                                        />
-                                    </div>
-                                </div>
-                                <div className={(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "" : "hidden"}>
-                                    <input
-                                        value={editingInputText}
-                                        onChange={(e) => setEditingInputText(e.target.value)}
-                                        onKeyDown={(e) => handleEditingEnterSubmit(e, categoryIndex, foodIndex)}
-                                        type="text"
-                                        placeholder="Add favorite"
-                                    ></input>
-                                    <select
-                                        value={selectedEditingCategoryIndex}
-                                        onChange={(e) => setSelectedEditingCategoryIndex(Number(e.target.value))}
-                                    >
-                                        {MEAL_CATEGORIES.map((category, index) => (
-                                            <option key={index} value={index}>
-                                                {category}
-                                            </option>
+                                    <Dropdown title={category} titleSize="text-xl" >
+                                        {(chosenFoods[categoryIndex] || []).map((food, foodIndex) => (
+                                            <div>
+                                                <div
+                                                    className={`bg-stone-300 place-items-center grid w-full pl-[3%] grid grid-cols-20 shadow rounded-[10px] ${(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "hidden" : ""}`}
+                                                >
+                                                    <div className="w-full col-span-16">
+                                                        {food}
+                                                    </div>
+                                                    <div
+                                                        className="w-6 h-6 col-span-2"
+                                                        onClick={() => {
+                                                            setEditingLocation([categoryIndex, foodIndex]);
+                                                            setSelectedEditingCategoryIndex(categoryIndex);
+                                                            setEditingInputText(food);
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={EditButton}
+                                                            alt="Edit"
+                                                            className="object-fill"
+                                                        />
+                                                    </div>
+                                                    <div 
+                                                        className="w-6 h-6 col-span-2"
+                                                        onClick={() => (handleDeleteButton(categoryIndex, foodIndex))}
+                                                    >
+                                                        <img
+                                                            src={DeleteButton}
+                                                            alt="Delete"
+                                                            className="object-fill"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    className={`grid place-items-center pl-[3%] w-full grid grid-cols-40 shadow rounded-[10px] bg-stone-100 ${(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "" : "hidden"}`}
+                                                >
+                                                    <input
+                                                        value={editingInputText}
+                                                        onChange={(e) => setEditingInputText(e.target.value)}
+                                                        onKeyDown={(e) => handleEditingEnterSubmit(e, categoryIndex, foodIndex)}
+                                                        type="text"
+                                                        maxLength={100}
+                                                        placeholder="Type here"
+                                                        className="w-full border-none focus:outline-none col-span-24"
+                                                    ></input>
+                                                    <select
+                                                        value={selectedEditingCategoryIndex}
+                                                        onChange={(e) => setSelectedEditingCategoryIndex(Number(e.target.value))}
+                                                        className="w-full col-span-10 bg-stone-100 rounded-[10px]"
+                                                    >
+                                                        {MEAL_CATEGORIES.map((category, index) => (
+                                                            <option key={index} value={index}>
+                                                                {category}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <div className="w-full col-span-1"></div>
+                                                    <div 
+                                                        onClick={() => {
+                                                            handleEditingSubmitButton(categoryIndex, foodIndex);
+                                                        }}
+                                                        className="w-6 h-6 col-span-2"
+                                                    >
+                                                        <img
+                                                            src={SaveButton}
+                                                            alt="Submit"
+                                                            className="object-fill"
+                                                        />
+                                                    </div>
+                                                    <div className="w-full col-span-1"></div>
+                                                    <div 
+                                                        onClick={() => {
+                                                            setEditingLocation([]);
+                                                        }}
+                                                        className="w-4 h-4 col-span-2"
+                                                    >
+                                                        <img
+                                                            src={CancelButton}
+                                                            alt="Submit"
+                                                            className="object-fill"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="w-full h-[1vh]"></div>
+                                            </div>
                                         ))}
-                                    </select>
-                                    <div 
-                                        onClick={() => {
-                                            handleEditingSubmitButton(categoryIndex, foodIndex);
-                                        }}
-                                        className="w-6 h-6"
-                                    >
-                                        <img
-                                            src={SaveButton}
-                                            alt="Submit"
-                                            className="object-fill"
-                                        />
-                                    </div>
-                                    <div 
-                                        onClick={() => {
-                                            setEditingLocation([]);
-                                        }}
-                                        className="w-6 h-6 "
-                                    >
-                                        <img
-                                            src={CancelButton}
-                                            alt="Submit"
-                                            className="object-fill"
-                                        />
-                                    </div>
+                                    </Dropdown>
                                 </div>
                             </div>
                         ))}
                     </div>
-                ))}
-            </div>
+                    <div className="h-[2vh]"></div>
+                </div>
+            </Dropdown>
         </div>
     );
 }

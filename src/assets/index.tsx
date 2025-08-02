@@ -7,6 +7,7 @@ import CancelButton from "./CancelButton.svg";
 import MildFace from "./MildFace.svg";
 import SadFace from "./SadFace.svg";
 import AngryFace from "./AngryFace.svg";
+import ArrowDown from "./ArrowDown.svg"
 
 export {
   ProfileImagePlaceHolder,
@@ -17,5 +18,6 @@ export {
   CancelButton,
   MildFace,
   SadFace,
-  AngryFace
+  AngryFace,
+  ArrowDown
 };
