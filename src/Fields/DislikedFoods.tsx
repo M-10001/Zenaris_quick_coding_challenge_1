@@ -47,7 +47,7 @@ export default function DislikedFoods () {
         if (!trimmed) return;
         const updated : Record<number, string[]> = { ...chosenFoods };
         const normalizedTrimmed = trimmed.replace(/\s+/g, '').toLowerCase();
-        const prevNormalizedTrimmed = updated[prevCategoryIndex][prevFoodIndex];
+        const prevNormalizedTrimmed = updated[prevCategoryIndex][prevFoodIndex].replace(/\s+/g, '').toLowerCase();
 
         if (normalizedTrimmed === prevNormalizedTrimmed && prevCategoryIndex === selectedEditingCategoryIndex) return;
 
@@ -159,7 +159,7 @@ export default function DislikedFoods () {
                                     <div>
                                         <div className="w-full h-[2vh]"></div>
                                         <div
-                                            className={`w-full grid place-items-center shadow pl-[3%] grid grid-cols-20 rounded-[10px] ${(editing && editingLocation[0] === categoryIndex && editingLocation[1] === foodIndex) ? "hidden" : ""}`}
+                                            className={`w-full bg-stone-300 grid place-items-center shadow pl-[3%] grid grid-cols-20 rounded-[10px] ${(editing && editingLocation[0] === categoryIndex && editingLocation[1] === foodIndex) ? "hidden" : ""}`}
                                         >
                                             <div className="w-full col-span-14">
                                                 {food}

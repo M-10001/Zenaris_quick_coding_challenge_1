@@ -46,7 +46,7 @@ export default function FavoriteFoods () {
         if (!trimmed) return;
         const updated : Record<number, string[]> = { ...chosenFoods };
         const normalizedTrimmed = trimmed.replace(/\s+/g, '').toLowerCase();
-        const prevNormalizedTrimmed = updated[prevCategoryIndex][prevFoodIndex];
+        const prevNormalizedTrimmed = updated[prevCategoryIndex][prevFoodIndex].replace(/\s+/g, '').toLowerCase();
 
         if (normalizedTrimmed === prevNormalizedTrimmed && prevCategoryIndex === selectedEditingCategoryIndex) return;
 
@@ -161,7 +161,7 @@ export default function FavoriteFoods () {
                                         {(chosenFoods[categoryIndex] || []).map((food, foodIndex) => (
                                             <div>
                                                 <div
-                                                    className={`bg-stone-300 place-items-center grid w-full pl-[3%] grid grid-cols-20 shadow rounded-[10px] ${(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "hidden" : ""}`}
+                                                    className={`bg-stone-200 place-items-center grid w-full pl-[3%] grid grid-cols-20 shadow rounded-[10px] ${(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "hidden" : ""}`}
                                                 >
                                                     <div className="w-full col-span-16">
                                                         {food}

@@ -67,7 +67,6 @@ export default function Dropdown({ title, children, titleSize }: DropdownProps) 
         style={dynamicStyle}
         onTransitionEnd={handleTransitionEnd}
       >
-        <div className="w-full h-[1vh]"></div>
         {children}
       </div>
     </div>

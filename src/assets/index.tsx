@@ -8,6 +8,7 @@ import MildFace from "./MildFace.svg";
 import SadFace from "./SadFace.svg";
 import AngryFace from "./AngryFace.svg";
 import ArrowDown from "./ArrowDown.svg"
+import WarningSign from "./WarningSign.svg"
 
 export {
   ProfileImagePlaceHolder,
@@ -19,5 +20,6 @@ export {
   MildFace,
   SadFace,
   AngryFace,
-  ArrowDown
+  ArrowDown,
+  WarningSign
 };

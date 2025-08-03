@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {SubmitButton, EditButton, DeleteButton, SaveButton, CancelButton} from "../assets/index.tsx";
+import {SubmitButton, EditButton, DeleteButton, SaveButton, CancelButton, WarningSign} from "../assets/index.tsx";
 import Dropdown from "../Components/Dropdown.tsx";
 
 const MEAL_CATEGORIES : string[] = ["Mild", "High", "Severe"];
@@ -66,7 +66,7 @@ export default function Intolerances () {
         if (!trimmed) return;
         const updated : Record<number, string[]> = { ...chosenFoods };
         const normalizedTrimmed = trimmed.replace(/\s+/g, '').toLowerCase();
-        const prevNormalizedTrimmed = updated[prevCategoryIndex][prevFoodIndex];
+        const prevNormalizedTrimmed = updated[prevCategoryIndex][prevFoodIndex].replace(/\s+/g, '').toLowerCase();
 
         if (normalizedTrimmed === prevNormalizedTrimmed && prevCategoryIndex === selectedEditingCategoryIndex) return;
 
@@ -101,6 +101,18 @@ export default function Intolerances () {
             updated[selectedEditingCategoryIndex].push(trimmed);
         }
 
+        const matchedAllergen = COMMON_ALLERGENS.find(
+            allergen => allergen.replace(/\s+/g, '').toLowerCase() === prevNormalizedTrimmed
+        );
+
+        console.log(prevNormalizedTrimmed);
+
+        if (matchedAllergen) {
+            const updatedAvailableAllergens : string[] = [...availableAllergens];
+            updatedAvailableAllergens.push(matchedAllergen);
+            setAvailableAllergens(updatedAvailableAllergens);
+        }
+
         setChosenFoods(updated);
         setEditingLocation([]);
     }
@@ -129,9 +141,13 @@ export default function Intolerances () {
         const updated = { ...chosenFoods };
         const normalizedTrimmed = updated[categoryIndex][foodIndex].replace(/\s+/g, '').toLowerCase();
 
-        if (COMMON_ALLERGENS.map(allergen => allergen.replace(/\s+/g, '').toLowerCase()).includes(normalizedTrimmed)) {
+        const matchedAllergen = COMMON_ALLERGENS.find(
+            allergen => allergen.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed
+        );
+
+        if (matchedAllergen) {
             const updatedAvailableAllergens : string[] = [...availableAllergens];
-            updatedAvailableAllergens.push(COMMON_ALLERGENS[categoryIndex][foodIndex]);
+            updatedAvailableAllergens.push(matchedAllergen);
             setAvailableAllergens(updatedAvailableAllergens);
         }
 
@@ -144,21 +160,32 @@ export default function Intolerances () {
             <Dropdown title="Intolerances" titleSize="text-2xl">
                 <div>
                     <div
-                        className="w-full grid place-items-center pt-[2vh] pb-[2vh] pl-[3%] pr-[3%] shadow rounded-[10px] bg-stone-300"
+                        className="w-full grid place-items-center pb-[2vh] pl-[3%] pr-[3%] shadow rounded-[10px] bg-red-100"
                     >
+                        <div className="w-full place-items-left grid grid-cols-20 pt-[1vh]">
+                            <div className="col-span-1 w-6 h-6">
+                                <img
+                                    src={WarningSign}
+                                    alt="Warning"
+                                    className="object-fill"
+                                />
+                            </div>
+                            <div className="w-full col-span-19 text-m">Make sure you add the correct Allergens</div>
+                        </div>
+                        <div className="w-full h-[1vh]"></div>
                         <div
                             className="w-full grid place-items-center grid-cols-3 grid-rows-auto gap-x-[5vw] gap-y-[1vh]"
                         >
                             {availableAllergens.map((allergen) => (
                                 <div
-                                    className="w-full grid pl-[3%] col-span-1 shadow rounded-[10px]"
+                                    className="w-full grid pl-[3%] col-span-1 shadow rounded-[10px] bg-stone-300"
                                     onClick={() => handleSubmit(allergen)}
                                 >
                                     {allergen}
                                 </div>
                             ))}
                         </div>
-                        <div className="w-full h-[2vh]"></div>
+                        <div className="w-full h-[1vh]"></div>
                         <div
                             className="w-full grid place-items-center pl-[3%] grid grid-cols-40 shadow rounded-[10px] bg-stone-300"
                         >
@@ -197,9 +224,9 @@ export default function Intolerances () {
                                     <div>
                                         <div className="w-full h-[2vh]"></div>
                                         <div
-                                            className={`w-full grid place-items-center shadow pl-[3%] grid grid-cols-20 rounded-[10px] ${(editing && editingLocation[0] === categoryIndex && editingLocation[1] === foodIndex) ? "hidden" : ""}`}
+                                            className={`w-full bg-stone-300 grid place-items-center shadow pl-[3%] grid grid-cols-20 rounded-[10px] ${(editing && editingLocation[0] === categoryIndex && editingLocation[1] === foodIndex) ? "hidden" : ""}`}
                                         >
-                                            <div className="w-full col-span-14">
+                                            <div className="w-full col-span-14 break-words overflow-visible">
                                                 {food}
                                             </div>
                                             <div 
@@ -246,7 +273,6 @@ export default function Intolerances () {
                                                     className={`w-6 h-6 rounded-full col-span-2 ${IRRITATION_GRADIENT[categoryIndex]} ${selectedEditingCategoryIndex === categoryIndex ? "ring-2 ring-gray-800" : ""}`}
                                                     onClick={() => {
                                                         setSelectedEditingCategoryIndex(categoryIndex);
-                                                        console.log("here");
                                                     }}
                                                 >
                                                 </div>

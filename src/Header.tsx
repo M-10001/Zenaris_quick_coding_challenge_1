@@ -18,7 +18,7 @@ export default function Header () {
             </div>
             <div className="h-[1vh]"></div>
             <div className="text-4xl">
-                Meal Preferences
+                Add Meal Preferences
             </div>
         </div>
     );
