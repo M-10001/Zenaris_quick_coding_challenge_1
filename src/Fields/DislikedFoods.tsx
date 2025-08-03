@@ -130,7 +130,7 @@ export default function DislikedFoods () {
                         ></input>
                         {MEAL_CATEGORIES.map((category, categoryIndex) => (
                             <div 
-                                className={`col-span-2 w-6 h-6 ${selectedCategoryIndex === categoryIndex ? "bg-gray-800" : ""}`}
+                                className={`col-span-2 rounded-[5px] w-6 h-6 ${selectedCategoryIndex === categoryIndex ? "bg-gray-800" : ""}`}
                                 onClick={() => setSelectedCategoryIndex(categoryIndex)}
                             >
                                 <img
@@ -142,8 +142,16 @@ export default function DislikedFoods () {
                         ))}
                         <div className="w-full col-span-1"></div>
                         <div 
-                            onClick={() => handleSubmitButton()}
-                            className="col-span-2 w-6 h-6"
+                            onClick={(e) =>
+                                {
+                                    const target = e.currentTarget;
+                                    target.classList.add("bg-gray-400");
+                                    handleSubmitButton();
+                                    setTimeout(() => {
+                                    target.classList.remove("bg-gray-400");
+                                    }, 200);
+                                }}
+                            className="col-span-2 w-6 h-6 rounded-full"
                         >
                             <img
                                 src={SubmitButton}

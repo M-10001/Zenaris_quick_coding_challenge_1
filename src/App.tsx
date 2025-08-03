@@ -5,7 +5,6 @@ import Intolerances from "./Fields/Intolerances";
 import ExtraInstructions from "./Fields/ExtraInstructions";
 
 function App() {
-
   return (
     <div className="w-full grid bg-amber-50">
       <div className="h-[5vh]"></div>

@@ -32,9 +32,14 @@ export default function ExtraInstructions () {
                             <div className={`w-full grid grid-cols-40 place-items-center ${editing ? "" : "hidden"}`}>
                                 <div className="w-full col-span-36"></div>
                                 <div
-                                    className="col-span-2 w-6 h-6"
-                                    onClick={() => {
+                                    className="col-span-2 w-6 h-6 rounded-[5px]"
+                                    onClick={(e) => {
+                                        const target = e.currentTarget;
+                                        target.classList.add("bg-gray-400");
                                         setPrevInputText(inputText);
+                                        setTimeout(() => {
+                                        target.classList.remove("bg-gray-400");
+                                        }, 200);
                                     }}
                                 >
                                     <img
