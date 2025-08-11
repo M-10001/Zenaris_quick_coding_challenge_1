@@ -6,7 +6,7 @@ import ExtraInstructions from "./Fields/ExtraInstructions";
 
 function App() {
   return (
-    <div className="w-full grid bg-blue-50">
+    <div className="w-full grid bg-amber-50">
       <div className="h-[5vh]"></div>
       <div className="min-h-[90vh] w-full grid grid-cols-20">
         <div className="col-span-1"></div>

@@ -13,10 +13,10 @@ export default function ExtraInstructions () {
                 <div>
                     <div>
                         <div>
-                            <div className="w-full grid grid-cols-40 place-items-center">
-                                <div className="col-span-37 w-full"></div>
+                            <div className={`w-full items-center flex ${editing ? "hidden" : ""}`}>
+                                <div className="flex-1"></div>
                                 <div
-                                    className={`col-span-2 w-6 h-6 ${editing ? "hidden" : ""}`}
+                                    className="col-span-2 w-6 h-6"
                                     onClick={() => {
                                         setEditing(true);
                                     }}
@@ -27,12 +27,12 @@ export default function ExtraInstructions () {
                                         className="object-fill"
                                     />
                                 </div>
-                                <div className="col-span-1 w-full"></div>
+                                <div className="w-[5%]"></div>
                             </div>
-                            <div className={`w-full grid grid-cols-40 place-items-center ${editing ? "" : "hidden"}`}>
-                                <div className="w-full col-span-36"></div>
+                            <div className={`w-full flex ${editing ? "" : "hidden"}`}>
+                                <div className="flex-1"></div>
                                 <div
-                                    className="col-span-2 w-6 h-6 rounded-[5px]"
+                                    className="w-6 h-6 rounded-[5px]"
                                     onClick={(e) => {
                                         const target = e.currentTarget;
                                         target.classList.add("bg-gray-400");
@@ -48,8 +48,9 @@ export default function ExtraInstructions () {
                                         className="object-fill"
                                     />
                                 </div>
+                                <div className="w-[1%]"></div>
                                 <div
-                                    className="col-span-2 w-4 h-4"
+                                    className="w-4 h-4"
                                     onClick={() => {
                                         setEditing(false);
                                         setInputText(prevInputText);
@@ -61,6 +62,7 @@ export default function ExtraInstructions () {
                                         className="object-fill"
                                     />
                                 </div>
+                                <div className="w-[5%]"></div>
                             </div>
                         </div>
                     </div>
