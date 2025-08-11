@@ -1,11 +1,16 @@
 import { useState } from "react";
 import {SubmitButton, EditButton, DeleteButton, SaveButton, CancelButton, MildFace, SadFace, AngryFace} from "../assets/index.tsx";
 import Dropdown from "../Components/Dropdown.tsx";
+import { PopupData } from "../Components/PopupData.ts";
+
+type Props = {
+  setPopupData: React.Dispatch<React.SetStateAction<PopupData>>;
+};
 
 const MEAL_CATEGORIES = ["Mild", "High disliked", "Absolutely no"];
 const FACES = [MildFace, SadFace, AngryFace];
 
-export default function DislikedFoods () {
+export default function DislikedFoods ({setPopupData} : Props) {
     const [inputText, setInputText] = useState<string>("");
     const [editingInputText, setEditingInputText] = useState<string>("");
 
@@ -35,7 +40,10 @@ export default function DislikedFoods () {
                     item => item.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed
                 )
             )
-        ) return;
+        ) {
+            setPopupData(new PopupData("Duplicate value.", "Error"));
+            return;
+        }
 
         updated[selectedCategoryIndex].push(trimmed);
         setChosenFoods(updated);
@@ -49,7 +57,10 @@ export default function DislikedFoods () {
         const normalizedTrimmed = trimmed.replace(/\s+/g, '').toLowerCase();
         const prevNormalizedTrimmed = updated[prevCategoryIndex][prevFoodIndex].replace(/\s+/g, '').toLowerCase();
 
-        if (normalizedTrimmed === prevNormalizedTrimmed && prevCategoryIndex === selectedEditingCategoryIndex) return;
+        if (normalizedTrimmed === prevNormalizedTrimmed && prevCategoryIndex === selectedEditingCategoryIndex) {
+            setPopupData(new PopupData("Duplicate value.", "Error"));
+            return;
+        }
 
         if (normalizedTrimmed === prevNormalizedTrimmed) {
             updated[prevCategoryIndex] = updated[prevCategoryIndex].filter((_, i) => i !== prevFoodIndex);
@@ -68,7 +79,10 @@ export default function DislikedFoods () {
             Object.entries(updated).some(([_, items]) =>
                 items.some(item => item.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed)
             )
-        ) return;
+        ) {
+            setPopupData(new PopupData("Duplicate value.", "Error"));
+            return;
+        }
 
         if (prevCategoryIndex === selectedEditingCategoryIndex) {
             updated[prevCategoryIndex][prevFoodIndex] = trimmed;
@@ -113,7 +127,7 @@ export default function DislikedFoods () {
     };
 
     return (
-        <div className="w-full bg-stone-200 shadow-md rounded-[10px] pl-[3%] pr-[3%]">
+        <div className="w-full bg-green-50 shadow-md rounded-[10px] pl-[3%] pr-[3%]">
             <Dropdown title="Disliked foods" titleSize="text-2xl">
                 <div>
                     <div
@@ -142,7 +156,7 @@ export default function DislikedFoods () {
                                 </div>
                             ))}
                         </div>
-                        <div className="w-[1%]"></div>
+                        <div className="min-w-[1%]"></div>
                         <div 
                             onClick={(e) =>
                                 {
@@ -183,7 +197,7 @@ export default function DislikedFoods () {
                                                     className="object-fill"
                                                 />
                                             </div>
-                                            <div className="w-[1%]"></div>
+                                            <div className="min-w-[1%]"></div>
                                             <div
                                                 className="w-6 h-6"
                                                 onClick={() => {
@@ -198,7 +212,7 @@ export default function DislikedFoods () {
                                                     className="object-fill"
                                                 />
                                             </div>
-                                            <div className="w-[1%]"></div>
+                                            <div className="min-w-[1%]"></div>
                                             <div 
                                                 className="w-6 h-6"
                                                 onClick={() => (handleDeleteButton(categoryIndex, foodIndex))}
@@ -234,7 +248,7 @@ export default function DislikedFoods () {
                                                     </div>
                                                 ))}
                                             </div>
-                                            <div className="w-[1%]"></div>
+                                            <div className="min-w-[1%]"></div>
                                             <div 
                                                 onClick={() => {
                                                     handleEditingSubmitButton(categoryIndex, foodIndex);
@@ -247,7 +261,7 @@ export default function DislikedFoods () {
                                                     className="object-fill"
                                                 />
                                             </div>
-                                            <div className="w-[1%]"></div>
+                                            <div className="min-w-[1%]"></div>
                                             <div 
                                                 onClick={() => {
                                                     setEditingLocation([]);

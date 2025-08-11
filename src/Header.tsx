@@ -4,7 +4,7 @@ export default function Header () {
     return (
         <div className="pl-[1vh]">
             <div>
-                <div className="bg-gray-300 w-16 h-16 rounded-full shadow-2xl">
+                <div className="bg-green-50 w-26 h-26 rounded-full shadow-2xl">
                     <img
                         src={ProfileImagePlaceHolder}
                         alt="Profile"

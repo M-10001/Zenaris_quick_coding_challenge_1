@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { ReactNode, CSSProperties } from "react";
 import { ArrowDown } from "../assets";
 
@@ -9,19 +9,16 @@ interface DropdownProps {
 }
 
 export default function Dropdown({ title, children, titleSize }: DropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [maxHeight, setMaxHeight] = useState<string>("0px");
   const contentRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
     const el = contentRef.current;
     if (!el) return;
-
+    
     if (isOpen) {
-      setMaxHeight(`${el.scrollHeight}px`);
-      setTimeout(() => {
-        setMaxHeight("0px");
-      }, 10);
+      setMaxHeight("0px");
     } else {
       setMaxHeight(`${el.scrollHeight}px`);
     }
@@ -38,9 +35,11 @@ export default function Dropdown({ title, children, titleSize }: DropdownProps) 
     }
   };
 
-  const dynamicStyle: CSSProperties = {
-    maxHeight: isOpen ? maxHeight : "0px",
-  };
+  useEffect(() => {
+    if (isOpen && contentRef.current) {
+      setMaxHeight("none");
+    }
+  }, []);
 
   return (
     <div className="w-full">
@@ -63,8 +62,8 @@ export default function Dropdown({ title, children, titleSize }: DropdownProps) 
       </div>
       <div
         ref={contentRef}
+        style={{ maxHeight: maxHeight }}
         className="transition-all duration-[1000ms] ease-in-out overflow-hidden"
-        style={dynamicStyle}
         onTransitionEnd={handleTransitionEnd}
       >
         {children}

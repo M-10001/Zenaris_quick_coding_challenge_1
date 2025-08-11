@@ -1,6 +1,11 @@
 import { useState } from "react";
 import {SubmitButton, EditButton, DeleteButton, SaveButton, CancelButton, WarningSign} from "../assets/index.tsx";
 import Dropdown from "../Components/Dropdown.tsx";
+import { PopupData } from "../Components/PopupData.ts";
+
+type Props = {
+  setPopupData: React.Dispatch<React.SetStateAction<PopupData>>;
+};
 
 const MEAL_CATEGORIES : string[] = ["Mild", "High", "Severe"];
 const IRRITATION_GRADIENT : string[] = ["bg-yellow-500", "bg-orange-500", "bg-red-600"];
@@ -16,7 +21,7 @@ const COMMON_ALLERGENS : string[] = [
   "Soy"
 ];
 
-export default function Intolerances () {
+export default function Intolerances ({setPopupData} : Props) {
     const [inputText, setInputText] = useState<string>("");
     const [editingInputText, setEditingInputText] = useState<string>("");
 
@@ -48,7 +53,10 @@ export default function Intolerances () {
                     item => item.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed
                 )
             )
-        ) return;
+        ) {
+            setPopupData(new PopupData("Duplicate value.", "Error"));
+            return;
+        }
 
         setAvailableAllergens(prev =>
             prev.filter(
@@ -68,7 +76,10 @@ export default function Intolerances () {
         const normalizedTrimmed = trimmed.replace(/\s+/g, '').toLowerCase();
         const prevNormalizedTrimmed = updated[prevCategoryIndex][prevFoodIndex].replace(/\s+/g, '').toLowerCase();
 
-        if (normalizedTrimmed === prevNormalizedTrimmed && prevCategoryIndex === selectedEditingCategoryIndex) return;
+        if (normalizedTrimmed === prevNormalizedTrimmed && prevCategoryIndex === selectedEditingCategoryIndex) {
+            setPopupData(new PopupData("Duplicate value.", "Error"));
+            return;
+        }
 
         if (normalizedTrimmed === prevNormalizedTrimmed) {
             updated[prevCategoryIndex] = updated[prevCategoryIndex].filter((_, i) => i !== prevFoodIndex);
@@ -87,7 +98,10 @@ export default function Intolerances () {
             Object.entries(updated).some(([_, items]) =>
                 items.some(item => item.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed)
             )
-        ) return;
+        ) {
+            setPopupData(new PopupData("Duplicate value.", "Error"));
+            return;
+        }
 
         if (prevCategoryIndex === selectedEditingCategoryIndex) {
             updated[prevCategoryIndex][prevFoodIndex] = trimmed;
@@ -104,8 +118,6 @@ export default function Intolerances () {
         const matchedAllergen = COMMON_ALLERGENS.find(
             allergen => allergen.replace(/\s+/g, '').toLowerCase() === prevNormalizedTrimmed
         );
-
-        console.log(prevNormalizedTrimmed);
 
         if (matchedAllergen) {
             const updatedAvailableAllergens : string[] = [...availableAllergens];
@@ -156,7 +168,7 @@ export default function Intolerances () {
     };
 
     return (
-        <div className="w-full bg-stone-200 shadow-md rounded-[10px] pl-[3%] pr-[3%]">
+        <div className="w-full bg-green-50 shadow-md rounded-[10px] pl-[3%] pr-[3%]">
             <Dropdown title="Intolerances" titleSize="text-2xl">
                 <div>
                     <div
@@ -170,8 +182,8 @@ export default function Intolerances () {
                                     className="object-fill"
                                 />
                             </div>
-                            <div className="w-[1%]"></div>
-                            <div className="w-[40%] text-m">Make sure you add the correct Allergens</div>
+                            <div className="min-w-[1%]"></div>
+                            <div className="min-w-[40%] text-m">Make sure you add the correct Allergens</div>
                             <div className="flex-1"></div>
                         </div>
                         <div className="w-full h-[1vh]"></div>
@@ -180,7 +192,7 @@ export default function Intolerances () {
                         >
                             {availableAllergens.map((allergen) => (
                                 <div
-                                    className="w-full grid pl-[3%] col-span-1 shadow rounded-[10px] bg-stone-300"
+                                    className="w-full flex pl-[3%] col-span-1 shadow rounded-[10px] bg-stone-300"
                                     onClick={() => handleSubmit(allergen)}
                                 >
                                     {allergen}
