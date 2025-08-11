@@ -160,17 +160,19 @@ export default function Intolerances () {
             <Dropdown title="Intolerances" titleSize="text-2xl">
                 <div>
                     <div
-                        className="w-full grid place-items-center pb-[2vh] pl-[3%] pr-[3%] shadow rounded-[10px] bg-red-100"
+                        className="w-full flex flex-col items-center pb-[2vh] pl-[3%] pr-[3%] shadow rounded-[10px] bg-red-100"
                     >
-                        <div className="w-full place-items-left grid grid-cols-20 pt-[1vh]">
-                            <div className="col-span-1 w-6 h-6">
+                        <div className="w-full flex pt-[1vh]">
+                            <div className="w-6 h-6">
                                 <img
                                     src={WarningSign}
                                     alt="Warning"
                                     className="object-fill"
                                 />
                             </div>
-                            <div className="w-full col-span-19 text-m">Make sure you add the correct Allergens</div>
+                            <div className="w-[1%]"></div>
+                            <div className="w-[40%] text-m">Make sure you add the correct Allergens</div>
+                            <div className="flex-1"></div>
                         </div>
                         <div className="w-full h-[1vh]"></div>
                         <div
@@ -187,7 +189,7 @@ export default function Intolerances () {
                         </div>
                         <div className="w-full h-[1vh]"></div>
                         <div
-                            className="w-full grid place-items-center pl-[3%] grid grid-cols-40 shadow rounded-[10px] bg-stone-300"
+                            className="w-full flex items-center pl-[3%] shadow rounded-[10px] bg-stone-300"
                         >
                             <input
                                 value={inputText}
@@ -196,15 +198,17 @@ export default function Intolerances () {
                                 type="text"
                                 maxLength={100}
                                 placeholder="Type here"
-                                className="w-full border-none focus:outline-none col-span-32"
+                                className="w-full border-none focus:outline-none flex-1"
                             ></input>
-                            {MEAL_CATEGORIES.map((_, categoryIndex) => (
-                                <div 
-                                    className={`col-span-2 w-6 h-6 rounded-full ${IRRITATION_GRADIENT[categoryIndex]} ${selectedCategoryIndex === categoryIndex ? "ring-2 ring-gray-800" : ""}`}
-                                    onClick={() => setSelectedCategoryIndex(categoryIndex)}
-                                >
-                                </div>
-                            ))}
+                            <div className="flex items-center">
+                                {MEAL_CATEGORIES.map((_, categoryIndex) => (
+                                    <div 
+                                        className={`w-6 h-6 rounded-full ${IRRITATION_GRADIENT[categoryIndex]} ${selectedCategoryIndex === categoryIndex ? "ring-2 ring-gray-800" : ""}`}
+                                        onClick={() => setSelectedCategoryIndex(categoryIndex)}
+                                    >
+                                    </div>
+                                ))}
+                            </div>
                             <div 
                                 onClick={(e) => {
                                     const target = e.currentTarget;

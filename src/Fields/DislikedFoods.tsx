@@ -117,7 +117,7 @@ export default function DislikedFoods () {
             <Dropdown title="Disliked foods" titleSize="text-2xl">
                 <div>
                     <div
-                        className="w-full grid place-items-center pl-[3%] pr-[3%] grid grid-cols-40 shadow rounded-[10px] bg-stone-300"
+                        className="w-full pl-[3%] pr-[3%] flex shadow rounded-[10px] bg-stone-300"
                     >
                         <input
                             value={inputText}
@@ -126,21 +126,23 @@ export default function DislikedFoods () {
                             type="text"
                             maxLength={100}
                             placeholder="Type here"
-                            className="w-full border-none focus:outline-none col-span-31"
+                            className="w-full border-none focus:outline-none flex-1"
                         ></input>
-                        {MEAL_CATEGORIES.map((category, categoryIndex) => (
-                            <div 
-                                className={`col-span-2 rounded-[5px] w-6 h-6 ${selectedCategoryIndex === categoryIndex ? "bg-gray-800" : ""}`}
-                                onClick={() => setSelectedCategoryIndex(categoryIndex)}
-                            >
-                                <img
-                                    src={FACES[categoryIndex]}
-                                    alt={category}
-                                    className="object-fill"
-                                />
-                            </div>
-                        ))}
-                        <div className="w-full col-span-1"></div>
+                        <div className="flex items-center">
+                            {MEAL_CATEGORIES.map((category, categoryIndex) => (
+                                <div 
+                                    className={`rounded-[5px] w-6 h-6 ${selectedCategoryIndex === categoryIndex ? "bg-gray-800" : ""}`}
+                                    onClick={() => setSelectedCategoryIndex(categoryIndex)}
+                                >
+                                    <img
+                                        src={FACES[categoryIndex]}
+                                        alt={category}
+                                        className="object-fill"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="w-[1%]"></div>
                         <div 
                             onClick={(e) =>
                                 {
@@ -151,7 +153,7 @@ export default function DislikedFoods () {
                                     target.classList.remove("bg-gray-400");
                                     }, 200);
                                 }}
-                            className="col-span-2 w-6 h-6 rounded-full"
+                            className="w-6 h-6 rounded-full"
                         >
                             <img
                                 src={SubmitButton}
@@ -167,13 +169,13 @@ export default function DislikedFoods () {
                                     <div>
                                         <div className="w-full h-[2vh]"></div>
                                         <div
-                                            className={`w-full bg-stone-300 grid place-items-center shadow pl-[3%] grid grid-cols-20 rounded-[10px] ${(editing && editingLocation[0] === categoryIndex && editingLocation[1] === foodIndex) ? "hidden" : ""}`}
+                                            className={`w-full bg-stone-300 flex items-center shadow pl-[3%] pr-[3%] rounded-[10px] ${(editing && editingLocation[0] === categoryIndex && editingLocation[1] === foodIndex) ? "hidden" : ""}`}
                                         >
-                                            <div className="w-full col-span-14">
+                                            <div className="w-full flex-1">
                                                 {food}
                                             </div>
                                             <div 
-                                                className="w-6 h-6 col-span-2"
+                                                className="w-6 h-6"
                                             >
                                                 <img
                                                     src={FACES[categoryIndex]}
@@ -181,8 +183,9 @@ export default function DislikedFoods () {
                                                     className="object-fill"
                                                 />
                                             </div>
+                                            <div className="w-[1%]"></div>
                                             <div
-                                                className="w-6 h-6 col-span-2"
+                                                className="w-6 h-6"
                                                 onClick={() => {
                                                     setEditingLocation([categoryIndex, foodIndex]);
                                                     setSelectedEditingCategoryIndex(categoryIndex);
@@ -195,8 +198,9 @@ export default function DislikedFoods () {
                                                     className="object-fill"
                                                 />
                                             </div>
+                                            <div className="w-[1%]"></div>
                                             <div 
-                                                className="w-6 h-6 col-span-2"
+                                                className="w-6 h-6"
                                                 onClick={() => (handleDeleteButton(categoryIndex, foodIndex))}
                                             >
                                                 <img
@@ -206,7 +210,7 @@ export default function DislikedFoods () {
                                                 />
                                             </div>
                                         </div>
-                                        <div className={`w-full place-items-center grid shadow bg-stone-100 pl-[3%] grid grid-cols-20 rounded-[10px] ${(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "" : "hidden"}`}>
+                                        <div className={`w-full flex items-center shadow bg-stone-100 pl-[3%] pr-[3%] rounded-[10px] ${(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "" : "hidden"}`}>
                                             <input
                                                 value={editingInputText}
                                                 onChange={(e) => setEditingInputText(e.target.value)}
@@ -214,25 +218,28 @@ export default function DislikedFoods () {
                                                 type="text"
                                                 maxLength={100}
                                                 placeholder="Type here"
-                                                className="w-full border-none focus:outline-none col-span-10"
+                                                className="w-full border-none focus:outline-none flex-1"
                                             ></input>
-                                            {MEAL_CATEGORIES.map((category, categoryIndex) => (
-                                                <div 
-                                                    className={`w-6 h-6 col-span-2  ${selectedEditingCategoryIndex === categoryIndex ? "bg-gray-800" : ""}`}
-                                                    onClick={() => setSelectedEditingCategoryIndex(categoryIndex)}
-                                                >
-                                                    <img
-                                                        src={FACES[categoryIndex]}
-                                                        alt={category}
-                                                        className="object-fill"
-                                                    />
-                                                </div>
-                                            ))}
+                                            <div className="flex items-center">
+                                                {MEAL_CATEGORIES.map((category, categoryIndex) => (
+                                                    <div 
+                                                        className={`w-6 h-6  ${selectedEditingCategoryIndex === categoryIndex ? "bg-gray-800" : ""}`}
+                                                        onClick={() => setSelectedEditingCategoryIndex(categoryIndex)}
+                                                    >
+                                                        <img
+                                                            src={FACES[categoryIndex]}
+                                                            alt={category}
+                                                            className="object-fill"
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div className="w-[1%]"></div>
                                             <div 
                                                 onClick={() => {
                                                     handleEditingSubmitButton(categoryIndex, foodIndex);
                                                 }}
-                                                className="w-6 h-6 col-span-2"
+                                                className="w-6 h-6"
                                             >
                                                 <img
                                                     src={SaveButton}
@@ -240,11 +247,12 @@ export default function DislikedFoods () {
                                                     className="object-fill"
                                                 />
                                             </div>
+                                            <div className="w-[1%]"></div>
                                             <div 
                                                 onClick={() => {
                                                     setEditingLocation([]);
                                                 }}
-                                                className="w-6 h-6 col-span-2"
+                                                className="w-6 h-6"
                                             >
                                                 <img
                                                     src={CancelButton}

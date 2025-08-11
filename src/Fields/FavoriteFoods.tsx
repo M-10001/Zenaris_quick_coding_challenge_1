@@ -240,7 +240,7 @@ export default function FavoriteFoods () {
                                                         onClick={() => {
                                                             setEditingLocation([]);
                                                         }}
-                                                        className="w-4 h-4 col-span-2"
+                                                        className="w-4 h-4"
                                                     >
                                                         <img
                                                             src={CancelButton}
