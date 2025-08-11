@@ -3,29 +3,28 @@ import FavoriteFoods from "./Fields/FavoriteFoods";
 import DislikedFoods from "./Fields/DislikedFoods";
 import Intolerances from "./Fields/Intolerances";
 import ExtraInstructions from "./Fields/ExtraInstructions";
+import { Popup } from "./Components/Popup";
+import { useState } from "react";
+import { PopupData } from "./Components/PopupData";
+
 
 function App() {
+  const [popupData, setPopupData] = useState<PopupData>(new PopupData("", "Information"));
+
   return (
-    <div className="w-full grid bg-amber-50">
-      <div className="h-[5vh]"></div>
-      <div className="min-h-[90vh] w-full grid grid-cols-20">
-        <div className="col-span-1"></div>
-        <div className="grid auto-rows-auto items-start grid-cols-20 rounded-2xl col-span-18 bg-stone-100">
-          <div className="col-span-1"></div>
-          <div className="grid col-span-18 gap-y-[5vh]">
-            <div></div>
+    <div className="w-full">
+      <div className="w-full bg-amber-200">
+        <div className="w-full py-[5%] px-[10%] bg-green-100/80">
+          <div className="flex-1 flex flex-col p-[3%] rounded-2xl border border-gray-200 gap-[5vh]">
             <Header></Header>
-            <FavoriteFoods></FavoriteFoods>
-            <DislikedFoods></DislikedFoods>
-            <Intolerances></Intolerances>
-            <ExtraInstructions></ExtraInstructions>
-            <div></div>
+            <FavoriteFoods setPopupData={setPopupData}></FavoriteFoods>
+            <DislikedFoods setPopupData={setPopupData}></DislikedFoods>
+            <Intolerances setPopupData={setPopupData}></Intolerances>
+            <ExtraInstructions setPopupData={setPopupData}></ExtraInstructions>
           </div>
-          <div className="col-span-1"></div>
         </div>
-        <div className="col-span-1"></div>
       </div>
-      <div className="h-[5vh]"></div>
+      <Popup data={popupData} setData={setPopupData}></Popup>
     </div>
   );
 }

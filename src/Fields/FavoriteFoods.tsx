@@ -1,10 +1,15 @@
 import { useState } from "react";
 import {SubmitButton, EditButton, DeleteButton, SaveButton, CancelButton} from "../assets/index.tsx";
 import Dropdown from "../Components/Dropdown.tsx";
+import { PopupData } from "../Components/PopupData.ts";
+
+type Props = {
+  setPopupData: React.Dispatch<React.SetStateAction<PopupData>>;
+};
 
 const MEAL_CATEGORIES :string[] = ["No category", "Breakfast", "Lunch", "Dinner", "Snacks", "Beverages"];
 
-export default function FavoriteFoods () {
+export default function FavoriteFoods ({setPopupData} : Props) {
     const [inputText, setInputText] = useState<string>("");
     const [editingInputText, setEditingInputText] = useState<string>("");
 
@@ -34,7 +39,10 @@ export default function FavoriteFoods () {
                     item => item.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed
                 )
             )
-        ) return;
+        ) {
+            setPopupData(new PopupData("Duplicate value.", "Error"));
+            return;
+        }
 
         updated[selectedCategoryIndex].push(trimmed);
         setChosenFoods(updated);
@@ -48,7 +56,10 @@ export default function FavoriteFoods () {
         const normalizedTrimmed = trimmed.replace(/\s+/g, '').toLowerCase();
         const prevNormalizedTrimmed = updated[prevCategoryIndex][prevFoodIndex].replace(/\s+/g, '').toLowerCase();
 
-        if (normalizedTrimmed === prevNormalizedTrimmed && prevCategoryIndex === selectedEditingCategoryIndex) return;
+        if (normalizedTrimmed === prevNormalizedTrimmed && prevCategoryIndex === selectedEditingCategoryIndex) {
+            setPopupData(new PopupData("Duplicate value.", "Error"));
+            return;
+        }
 
         if (normalizedTrimmed === prevNormalizedTrimmed) {
             updated[prevCategoryIndex] = updated[prevCategoryIndex].filter((_, i) => i !== prevFoodIndex);
@@ -67,7 +78,10 @@ export default function FavoriteFoods () {
             Object.entries(updated).some(([_, items]) =>
                 items.some(item => item.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed)
             )
-        ) return;
+        ) {
+            setPopupData(new PopupData("Duplicate value.", "Error"));
+            return;
+        }
 
         if (prevCategoryIndex === selectedEditingCategoryIndex) {
             updated[prevCategoryIndex][prevFoodIndex] = trimmed;
@@ -112,11 +126,11 @@ export default function FavoriteFoods () {
     };
 
     return (
-        <div className="w-full bg-stone-200 shadow-md rounded-[10px] pl-[3%] pr-[3%]">
+        <div className="w-full bg-green-50 shadow-md rounded-[10px] pl-[3%] pr-[3%]">
             <Dropdown title="Favorite foods" titleSize="text-2xl" >
                 <div>
                     <div
-                        className="w-full grid place-items-center pl-[3%] pr-[3%] grid grid-cols-40 shadow rounded-[10px] bg-stone-300"
+                        className="w-full items-center flex pl-[3%] pr-[3%] shadow rounded-[10px] bg-stone-300"
                     >
                         <input
                             value={inputText}
@@ -125,12 +139,12 @@ export default function FavoriteFoods () {
                             type="text"
                             maxLength={100}
                             placeholder="Type here"
-                            className="w-full border-none focus:outline-none col-span-29"
+                            className="flex-1 border-none focus:outline-none"
                         ></input>
                         <select
                             value={selectedCategoryIndex}
                             onChange={(e) => setSelectedCategoryIndex(Number(e.target.value))}
-                            className="w-full col-span-8 bg-stone-300 rounded-[10px]"
+                            className="min-w-[20%] bg-stone-300 rounded-[10px]"
                         >
                             {MEAL_CATEGORIES.map((category, index) => (
                                 <option key={index} value={index}>
@@ -138,7 +152,7 @@ export default function FavoriteFoods () {
                                 </option>
                             ))}
                         </select>
-                        <div className="w-full col-span-1"></div>
+                        <div className="min-w-[1%]"></div>
                         <div 
                             onClick={(e) => {
                                 const target = e.currentTarget;
@@ -148,7 +162,7 @@ export default function FavoriteFoods () {
                                 target.classList.remove("bg-gray-400");
                                 }, 200);
                             }}
-                            className="col-span-2 w-6 h-6 rounded-full"
+                            className="w-6 h-6 rounded-full"
                         >
                             <img
                                 src={SubmitButton}
@@ -168,13 +182,13 @@ export default function FavoriteFoods () {
                                         {(chosenFoods[categoryIndex] || []).map((food, foodIndex) => (
                                             <div>
                                                 <div
-                                                    className={`bg-stone-200 place-items-center grid w-full pl-[3%] grid grid-cols-20 shadow rounded-[10px] ${(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "hidden" : ""}`}
+                                                    className={`bg-stone-200 flex items-center w-full pl-[3%] pr-[3%] shadow rounded-[10px] ${(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "hidden" : ""}`}
                                                 >
-                                                    <div className="w-full col-span-16">
+                                                    <div className="flex-1">
                                                         {food}
                                                     </div>
                                                     <div
-                                                        className="w-6 h-6 col-span-2"
+                                                        className="w-6 h-6"
                                                         onClick={() => {
                                                             setEditingLocation([categoryIndex, foodIndex]);
                                                             setSelectedEditingCategoryIndex(categoryIndex);
@@ -187,8 +201,9 @@ export default function FavoriteFoods () {
                                                             className="object-fill"
                                                         />
                                                     </div>
+                                                    <div className="min-w-[1%]"></div>
                                                     <div 
-                                                        className="w-6 h-6 col-span-2"
+                                                        className="w-6 h-6"
                                                         onClick={() => (handleDeleteButton(categoryIndex, foodIndex))}
                                                     >
                                                         <img
@@ -199,7 +214,7 @@ export default function FavoriteFoods () {
                                                     </div>
                                                 </div>
                                                 <div
-                                                    className={`grid place-items-center pl-[3%] w-full grid grid-cols-40 shadow rounded-[10px] bg-stone-100 ${(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "" : "hidden"}`}
+                                                    className={`flex items-center pl-[3%] pr-[3%] w-full shadow rounded-[10px] bg-stone-100 ${(editing && editingLocation[0] == categoryIndex && editingLocation[1] == foodIndex) ? "" : "hidden"}`}
                                                 >
                                                     <input
                                                         value={editingInputText}
@@ -208,12 +223,12 @@ export default function FavoriteFoods () {
                                                         type="text"
                                                         maxLength={100}
                                                         placeholder="Type here"
-                                                        className="w-full border-none focus:outline-none col-span-24"
+                                                        className="flex-1 border-none focus:outline-none"
                                                     ></input>
                                                     <select
                                                         value={selectedEditingCategoryIndex}
                                                         onChange={(e) => setSelectedEditingCategoryIndex(Number(e.target.value))}
-                                                        className="w-full col-span-10 bg-stone-100 rounded-[10px]"
+                                                        className="min-w-[20%] bg-stone-100 rounded-[10px]"
                                                     >
                                                         {MEAL_CATEGORIES.map((category, index) => (
                                                             <option key={index} value={index}>
@@ -221,12 +236,12 @@ export default function FavoriteFoods () {
                                                             </option>
                                                         ))}
                                                     </select>
-                                                    <div className="w-full col-span-1"></div>
+                                                    <div className="min-w-[1%]"></div>
                                                     <div 
                                                         onClick={() => {
                                                             handleEditingSubmitButton(categoryIndex, foodIndex);
                                                         }}
-                                                        className="w-6 h-6 col-span-2"
+                                                        className="w-6 h-6"
                                                     >
                                                         <img
                                                             src={SaveButton}
@@ -234,12 +249,12 @@ export default function FavoriteFoods () {
                                                             className="object-fill"
                                                         />
                                                     </div>
-                                                    <div className="w-full col-span-1"></div>
+                                                    <div className="min-w-[1%]"></div>
                                                     <div 
                                                         onClick={() => {
                                                             setEditingLocation([]);
                                                         }}
-                                                        className="w-4 h-4 col-span-2"
+                                                        className="w-4 h-4"
                                                     >
                                                         <img
                                                             src={CancelButton}
