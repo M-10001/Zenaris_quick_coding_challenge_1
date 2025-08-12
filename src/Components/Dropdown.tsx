@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import type { ReactNode, CSSProperties } from "react";
+import type { ReactNode } from "react";
 import { ArrowDown } from "../assets";
 
 interface DropdownProps {
