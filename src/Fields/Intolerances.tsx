@@ -36,7 +36,7 @@ export default function Intolerances ({setPopupData} : Props) {
     const editing : boolean = editingLocation.length !== 0;
 
     const handleSubmit = (text ?: string) => {
-        let trimmed : string = text?.trim() || inputText.trim();
+        const trimmed : string = text?.trim() || inputText.trim();
         if (!trimmed) return;
 
         const updated : Record<number, string[]> = { ...chosenFoods };
@@ -70,7 +70,7 @@ export default function Intolerances ({setPopupData} : Props) {
     };
 
     const handleEditingSubmit = (prevCategoryIndex : number, prevFoodIndex : number) => {
-        let trimmed : string = editingInputText.trim();
+        const trimmed : string = editingInputText.trim();
         if (!trimmed) return;
         const updated : Record<number, string[]> = { ...chosenFoods };
         const normalizedTrimmed = trimmed.replace(/\s+/g, '').toLowerCase();
@@ -95,7 +95,7 @@ export default function Intolerances ({setPopupData} : Props) {
         }
 
         if (
-            Object.entries(updated).some(([_, items]) =>
+            Object.entries(updated).some(([, items]) =>
                 items.some(item => item.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed)
             )
         ) {

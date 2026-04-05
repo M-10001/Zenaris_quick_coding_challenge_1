@@ -23,7 +23,7 @@ export default function DislikedFoods ({setPopupData} : Props) {
     const editing : boolean = editingLocation.length !== 0;
 
     const handleSubmit = () => {
-        let trimmed : string = inputText.trim();
+        const trimmed : string = inputText.trim();
         if (!trimmed) return;
 
         const updated : Record<number, string[]> = { ...chosenFoods };
@@ -51,7 +51,7 @@ export default function DislikedFoods ({setPopupData} : Props) {
     };
 
     const handleEditingSubmit = (prevCategoryIndex : number, prevFoodIndex : number) => {
-        let trimmed : string = editingInputText.trim();
+        const trimmed : string = editingInputText.trim();
         if (!trimmed) return;
         const updated : Record<number, string[]> = { ...chosenFoods };
         const normalizedTrimmed = trimmed.replace(/\s+/g, '').toLowerCase();
@@ -76,7 +76,7 @@ export default function DislikedFoods ({setPopupData} : Props) {
         }
 
         if (
-            Object.entries(updated).some(([_, items]) =>
+            Object.entries(updated).some(([, items]) =>
                 items.some(item => item.replace(/\s+/g, '').toLowerCase() === normalizedTrimmed)
             )
         ) {
